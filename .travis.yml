@@ -17,13 +17,13 @@ notifications:
     on_failure: always
     on_start: never
   slack:
-    secure: ttX1Pt75o9UPvShOXSKWCMJ1J0HBgxeNF86v0Sz7lqfhpeK//TzQcPU29BsAF1IxuMRiI9bZXhLoFDHyv6ZMhc9EtxY5cVnXIt81SB2w6RR+MMeFNMGcUb9oAmck7SqKznAznkrE8TJUMuPGqcS75HWu1iydeY0LlpFwWIoUa00tuhJfja9fCiD6fzZ1CRRcS7GAIELtqSVBajd5PQ6lXK1Nl7Pt8Vp9TINzipblI1/ooCqJmFJ4VeTwenJikS8NhYYqQ05R+3xhN2/lEl1mBiRDn3TA6o6JlCVCl+uRdfIJKKi7L+yulmue9ejl/I+S4EUIpqp26+r8iEZnMIEvRf1EJuMP0WeNIvzNbUZncLfjLXjeSTOT3FZNPNaWFsugm9FVEq82/N9yOdrT8LHKXdbmyAw6+cItwMLCXdRsgrHfsMg74lcy6fhiT/Udnu8JXQ84hkQ+gOOYNOV9liQBHvB/2qutPIc0KpmVHQc8B+jFCXP+ZR/T+U1RqeDuJOWDqxo5Lfg4+dq8jOnWkGvSVXIOQM9q9mFCTczxJEhHqrNoazJke/BJd3gActemd83ACD6rvYz5W5ZfmVKAppk0+Iv7dv6VNuAVH0C8DT9aNkHVd4qp7KHkLQcQZhZO49P+tXIj/NahrM5zHbEOmdZLgNaYUcvk6fmd7RWgBLAgqjg=
+    secure: KbPKtmi89Q6iVi8Kz9SmFKJcclEJWmnVBz0FayLpMv6MeoXXTMpftColoDaAlVKhMqcp9YFLLV7TCtu5liCzHiuMmrsDbo6UguoOr2IY7gxk9Q4KX7JOwur/ItyRVNQhFgxYC8A6wfZ1Xatxml858kSKHpbO687n5vziIWRCvPKfwxc2ubp5DQpL9QkPSDRE1EFzxSjupYsmnV6kpnczFp2eI8uZFIfpWiv82oBVjtU0ZFEXx4Pde2/qh+ucvF2ZWYW61W2DTCddC6pd721LJ3wkmzZikn/dosF4/vu+hByIDosJ1kUDt859LxcKRG96auLsvZjgM6Olbnt+b2vIQJCWcQBwFKvQztgLYDiwZjlPeo3q9GTxg+F7ZZcmaesJx9BMKdCdu202SZSubraeBxh9HJc/TDMCybX59tPYNeOeU3tSxLIzqpjtAeZASzFVF81OXhiaXe5HoHb1rPKojcAqnWhy3XTj8fbiv81F74dO/jnO/9cQT9bXOgu9N/deIIcc7dyL8Xwx2BVZzjRaQfKm7x8f6GNvVI00mmQziafcor0oe2L4IvJyyJmxvZzcON8jPTrA0Omou8bf0IJsbTitPYEu5PsrVfuV5ZlQJGN8tj4PGqMPLSchCcY2+Rs822fUxWnhPgFiaANsarJvFvJ153Lk0vE4dPSWiwJzVGM=
 
 before_install:
 - docker build -t  mxlei01/url-shortener .
 
 script: 
-- docker run --net="host" mxlei01/url-shortener /bin/sh -c "su - postgres -c '/usr/lib/postgresql/9.4/bin/postgres -D /var/lib/postgresql/9.4/main -c config_file=/etc/postgresql/9.4/main/postgresql.conf &' && sleep 60 && cd /application/Tornado-Application && python -m tornado.test.runtests unit_tests.run_all_tests"
+- docker run mxlei01/url-shortener /bin/sh -c "su - postgres -c '/usr/lib/postgresql/9.4/bin/postgres -D /var/lib/postgresql/9.4/main -c config_file=/etc/postgresql/9.4/main/postgresql.conf &' && sleep 60 && cd /application/Tornado-Application && python -m tornado.test.runtests unit_tests.run_all_tests"
 
 after_success:
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
