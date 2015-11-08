@@ -74,7 +74,7 @@ VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 #===========================Start Install Postgres===============================
 
 #=====Create a folder, and copy our application into the application folder====
-RUN mkdir /application
+RUN sudo mkdir /application
 COPY Tornado-Application /application/Tornado-Application
 #=====Create a folder, and copy our application into the application folder====
 
@@ -89,6 +89,6 @@ RUN pip install -r /application/Tornado-Application/requirements.txt
 
 #===========================Run Supervisord====================================
 COPY Supervisord/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-RUN mkdir /var/supervisord
+RUN sudo mkdir /var/supervisord
 CMD /usr/bin/supervisord
 #===========================Run Supervisord====================================
