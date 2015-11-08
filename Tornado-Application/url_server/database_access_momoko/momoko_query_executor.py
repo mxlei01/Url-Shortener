@@ -81,6 +81,30 @@ class AsyncMomokoDBQueryExecutor(object):
         raise gen.Return(future)
 
     @gen.coroutine
+    def get_shortened_url_info(self, shortened_url):
+        # Usage:
+        #       This function returns the url given the shorted_url's info
+        # Arguments:
+        #       shortened_url (string) : the shortened version of the original url
+        # Return:
+        #       future        (cursor) : a future that contains a cursor
+
+        # get statement to select a rows where url = shortened_url
+        get_url_info = """
+            SELECT *
+            FROM url_info
+            WHERE shortened_url=%s
+        """
+
+        # Execute the statement using the momoko pool
+        future = yield self.momoko_pool.execute(get_url_info, (shortened_url,))
+
+        self.logger.info("shortened_url:%s, selected" % (shortened_url))
+
+        raise gen.Return(future)
+
+
+    @gen.coroutine
     def delete_shortened_url(self, shortened_url):
         # Usage:
         #       This function returns the url given the shorted_url
