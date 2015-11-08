@@ -23,8 +23,8 @@ before_install:
 - docker build -t  mxlei01/url-shortener .
 
 script: 
-- docker run --net="host" mxlei01/url-shortener /bin/sh -c "cd /application/Tornado-Application && python -m tornado.test.runtests test"
+- docker run --net="host" mxlei01/url-shortener /bin/sh -c "sleep 60 && cd /application/Tornado-Application && python -m tornado.test.runtests unit_tests.run_all_tests"
 
 after_success:
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-- docker push mxlei01/youtube-channel-search-travis
+- docker push mxlei01/url-shortener
