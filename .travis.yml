@@ -17,14 +17,14 @@ notifications:
     on_failure: always
     on_start: never
   slack:
-    secure: Brt+f9fBnakPmCWE+Is9OKvymFMjTDFD1ir1/27ufcZIBhS43hDe193/3fDAVWp5C7mrY6ZxmxAeeE/iF7RJv/br6myqeYRGCyR+tw7tr4n07U31RZRjTEnzEq80359mLOyiHcntxCwsULZ1CPtO5w6FDWdZNW5GpagF8kstCOJhuI7JlzJPqueX19ZqSTA8hGK+YfQcXy7Zd75osHcqlixM759Fl3CJQM6XTr1M+NdihPq1YvTm2SMQr+mPeKL7iuyb01MBu2LvTqiAfFMdOGmLoo5/eKheudbr+feH3fELOjW1K8stx1yOqa9DAggGrM0844W+XL6Eif/mjKMnaAIeOvSm+3iALVj7cVnwUjOFTiqn7aAkEk9+lWxa0l7kLtSkV7hSk0EY1gjADwbiVc3w0AIdA44ES3nZq3nAJGQnxPq4xlaf0etGfHfNsbN5YoRunxw0FbCf94Xy4OawEysx2t2CRm2yjqLpV3XqNWE34aMuSvuwD8omaSTpYVzB1tWXWqJcjoLSMzZ7BO5SvNg/v0agxreNv4ZbFVL8JlBGAcCm2C35fGNqE0ANSO+UPEqUIjcL0295fISDq2/PafbSmZ19SCXtSif+d0o5YH4YhwVvZjFkZHZNZauzmTvWswy2IDTjUTfuZTxOecIfrmIhOLuS2EgDemjoTheHOQM=
+    secure: ttX1Pt75o9UPvShOXSKWCMJ1J0HBgxeNF86v0Sz7lqfhpeK//TzQcPU29BsAF1IxuMRiI9bZXhLoFDHyv6ZMhc9EtxY5cVnXIt81SB2w6RR+MMeFNMGcUb9oAmck7SqKznAznkrE8TJUMuPGqcS75HWu1iydeY0LlpFwWIoUa00tuhJfja9fCiD6fzZ1CRRcS7GAIELtqSVBajd5PQ6lXK1Nl7Pt8Vp9TINzipblI1/ooCqJmFJ4VeTwenJikS8NhYYqQ05R+3xhN2/lEl1mBiRDn3TA6o6JlCVCl+uRdfIJKKi7L+yulmue9ejl/I+S4EUIpqp26+r8iEZnMIEvRf1EJuMP0WeNIvzNbUZncLfjLXjeSTOT3FZNPNaWFsugm9FVEq82/N9yOdrT8LHKXdbmyAw6+cItwMLCXdRsgrHfsMg74lcy6fhiT/Udnu8JXQ84hkQ+gOOYNOV9liQBHvB/2qutPIc0KpmVHQc8B+jFCXP+ZR/T+U1RqeDuJOWDqxo5Lfg4+dq8jOnWkGvSVXIOQM9q9mFCTczxJEhHqrNoazJke/BJd3gActemd83ACD6rvYz5W5ZfmVKAppk0+Iv7dv6VNuAVH0C8DT9aNkHVd4qp7KHkLQcQZhZO49P+tXIj/NahrM5zHbEOmdZLgNaYUcvk6fmd7RWgBLAgqjg=
 
 before_install:
 - docker build -t  mxlei01/url-shortener .
 
 script: 
-- docker run --net="host" mxlei01/url-shortener /bin/sh -c "su - postgres -c '/etc/init.d/postgresql start' && cd /application/Tornado-Application && python -m tornado.test.runtests unit_tests.run_all_tests"
+- docker run --net="host" mxlei01/url-shortener /bin/sh -c "su - postgres -c '/usr/lib/postgresql/9.4/bin/postgres -D /var/lib/postgresql/9.4/main -c config_file=/etc/postgresql/9.4/main/postgresql.conf &' && sleep 60 && cd /application/Tornado-Application && python -m tornado.test.runtests unit_tests.run_all_tests"
 
 after_success:
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-- docker push mxlei01/url-shortener
+- docker push mxlei01/youtube-channel-search-travis
