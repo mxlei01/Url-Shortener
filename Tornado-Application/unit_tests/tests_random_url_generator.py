@@ -5,6 +5,10 @@ from random_url_generator.random_url_generator import AsyncRandomURLGenerator
 from random_url_generator.random_url_settings import length_url
 
 class TestURLGenerator(AsyncTestCase):
+    #   Usage:
+    #       Tests for the random url generator. This class inherits from the
+    #       AsyncTestCase class in order to test coroutines, and futures.
+
     @tornado.testing.gen_test
     def test_url_generated_length(self):
         # Usage:

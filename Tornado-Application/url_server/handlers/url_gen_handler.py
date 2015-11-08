@@ -61,4 +61,4 @@ class URLGenHandler(tornado.web.RequestHandler):
         # Return a json format data that includes the shortened url and
         # the original url
         self.write(json_encode(dict(shortened_url=shortened_url,
-                                    original_url=url)))
+                                    original_url=self.get_argument('url'))))

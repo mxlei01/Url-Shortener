@@ -3,6 +3,10 @@ from tornado.testing import AsyncTestCase
 from executor_thread_pool.executor import executor
 
 class TestExecutor(AsyncTestCase):
+    #   Usage:
+    #       Tests for the executors. This class inherits from the
+    #       AsyncTestCase class in order to test coroutines, and futures.
+
     @tornado.testing.gen_test
     def test_executor_math(self):
         # Usage:
