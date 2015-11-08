@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mxlei01/Url-Shortener.svg)](https://travis-ci.org/mxlei01/Url-Shortener)
+
 # url-shortener
 A server side application that shortens url
 
