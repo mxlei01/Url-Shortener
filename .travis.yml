@@ -27,4 +27,4 @@ script:
 
 after_success:
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-- docker push mxlei01/youtube-channel-search-travis
+- docker push mxlei01/url-shortener
