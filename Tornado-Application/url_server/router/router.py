@@ -1,0 +1,18 @@
+import tornado.web
+from url_server.handlers.url_gen_handler import URLGenHandler
+from url_server.database_access_momoko.momoko_query_executor import AsyncMomokoDBQueryExecutor
+from url_server.handler_helpers.sql_cursor_parser import AsyncSQLDataParser
+from random_url_generator.random_url_generator import AsyncRandomURLGenerator
+from router_settings import settings
+from logger.logger import logger
+
+# url.py is used to map between different urls to handlers, and also to set different settings
+
+# application is a tornado web application object, that can be used to set handlers, and settings
+application = tornado.web.Application([
+    # Map the "/" url to main handler
+    (r"/url_gen", URLGenHandler, dict(url_generator=AsyncRandomURLGenerator(),
+                                      db=AsyncMomokoDBQueryExecutor(),
+                                      cursor_parser=AsyncSQLDataParser(),
+                                      logger=logger))
+], **settings)
