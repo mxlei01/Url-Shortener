@@ -36,8 +36,12 @@ class URLGenHandler(tornado.web.RequestHandler):
         # Return:
         #       Json : a json format dictionary of shortened url, and original url
 
+
+        # See if one of the parameters include a "change" parameter
+        change_to_url = self.get_argument('change', None)
+
         # Generate a shortened url
-        shortened_url = yield self.url_generator.generate_url()
+        shortened_url = yield self.url_generator.generate_url(change_to_url)
 
         # Try to see if the shortened url exists by query it, this will return a cursor
         get_shortened_url = yield self.db.get_shortened_url(shortened_url)

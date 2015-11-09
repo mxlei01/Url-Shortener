@@ -13,7 +13,6 @@ from url_server.handler_helpers.sql_cursor_parser import AsyncSQLDataParser
 from random_url_generator.random_url_generator import AsyncRandomURLGenerator
 from random_url_generator.random_url_settings import test_domain_base
 
-
 class TestURLGenHandler(AsyncHTTPTestCase):
     #   Usage:
     #       Tests for the url server, the difference from other tests is that
@@ -207,3 +206,29 @@ class TestURLGenHandler(AsyncHTTPTestCase):
 
         # Delete the shortened URL when we are done
         yield self.db.delete_shortened_url(json_response["shortened_url"])
+
+    @tornado.testing.gen_test
+    def test_05_change_to_url(self):
+        # Usage:
+        #       Fetches a generated url from the /url_gen, which will give us a json response
+        #       that contains both the shortened url and original url in the body. We will test
+        #       if that shortened_url and original_url exists. Later on then delete the shortened_url
+        #       from the database.
+        # Arguments:
+        #       None
+
+        # Change the last path to something else
+        change_to_url = "Dummy"
+
+        # A url to shorten
+        url_to_shorten = "http://www.google.com"
+
+        # Get a response, which contains an url and original url
+        response = yield self.http_client.fetch(self.get_url('/url_gen?change=%s' % (change_to_url)),
+                                                method='POST', body="url=%s" % (url_to_shorten))
+
+        # Test if the response's original_url is what we sent out
+        json_response = json.loads(response.body)
+
+        # Test if the shortened url's path is what we changed to
+        self.assertIsNotNone(urlparse.urlsplit(json_response["shortened_url"]).path.split("/")[-1], change_to_url)
