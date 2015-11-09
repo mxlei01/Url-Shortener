@@ -1,15 +1,4 @@
-FROM ubuntu:14.04
-MAINTAINER SequenceIQ
-
-#===========================Start Fix PAM======================================
-#Setup build environment for libpam
-RUN apt-get update -y
-RUN apt-get upgrade -y
-RUN apt-get -y build-dep pam
-
-#Rebuild and istall libpam with --disable-audit option
-RUN export CONFIGURE_OPTS=--disable-audit && cd /root && apt-get -b source pam && dpkg -i libpam-doc*.deb libpam-modules*.deb libpam-runtime*.deb libpam0g*.deb
-#===========================End Fix PAM========================================
+FROM ubuntu:12.04
 
 #===========================Start Update Ubuntu================================
 RUN apt-get -y update 
