@@ -5,15 +5,16 @@ A server side application that shortens url
 
 # How To Use
 <p>
-URL: http://localhost:8888/url_gen
-<br>
-- Effect: will generate a shortened_url
-<br>
-- For example, www.google.com will be mapped to http://localhost:8888/url_shortener/XXXXXX
-<br>
-- Returns: {"original_url":url, "shorted_url":url}
+	<h3> URL: http://localhost:8888/url_gen </h3>
+	<br>
+	- Effect: will generate a shortened_url
+	<br>
+	- For example, www.google.com will be mapped to http://localhost:8888/url_shortener/XXXXXX
+	<br>
+	- Returns: {"original_url":url, "shorted_url":url}
 </p>
-<br><br><br>
+
+
 http://localhost:8888/url_gen?change=text => will generate a shortened_url with text as it's last path
 <br>
 for example, www.google.com will be mapped to http://localhost:8888/url_shortener/XXXXXX
