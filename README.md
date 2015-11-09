@@ -5,7 +5,7 @@ A server side application that shortens url
 
 # How To Use
 <p>
-	<h3> URL: http://localhost:8888/url_gen </h3>
+	<b> URL: http://localhost:8888/url_gen </b>
 	<br>
 	- Effect: will generate a shortened_url
 	<br>
