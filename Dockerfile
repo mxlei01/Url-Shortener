@@ -1,4 +1,5 @@
-FROM ubuntu
+FROM ubuntu:14.04
+MAINTAINER SequenceIQ
 
 #===========================Start Update Ubuntu================================
 RUN apt-get -y update 
