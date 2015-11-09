@@ -173,8 +173,8 @@ class TestURLGenHandler(AsyncHTTPTestCase):
         # For one date after another, the first date should always be greater than the second date
         for row in xrange(len(url_to_shorten_array)):
             if row+1 < len(url_to_shorten_array):
-                self.assertTrue(json_response["latest_100_shortened_urls"][row]["counts"] >=
-                                json_response["latest_100_shortened_urls"][row+1]["counts"])
+                self.assertTrue(json_response["top_10_domain_30_days"][row]["counts"] >=
+                                json_response["top_10_domain_30_days"][row+1]["counts"])
 
         # Delete all the records in the database
         yield self.db.delete_all_records()

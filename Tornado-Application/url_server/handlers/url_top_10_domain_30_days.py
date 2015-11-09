@@ -38,4 +38,4 @@ class URLTop10Domain30Days(tornado.web.RequestHandler):
         get_top_10_domain_30_days_data = yield self.cursor_parser.submit_get_data(get_top_10_domain_30_days)
 
         # Return the json encoded form of a an array of (shortened_url, date) tuples
-        self.write(json_encode(dict(latest_100_shortened_urls=get_top_10_domain_30_days_data)))
+        self.write(json_encode(dict(top_10_domain_30_days=get_top_10_domain_30_days_data)))
