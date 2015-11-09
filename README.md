@@ -10,8 +10,8 @@ URL: http://localhost:8888/url_gen
 <br>
 - For example, www.google.com will be mapped to http://localhost:8888/url_shortener/XXXXXX
 <br>
-Returns: {"original_url":url, "shorted_url":url}
-<br><br>
+- Returns: {"original_url":url, "shorted_url":url}
+<br><br><br>
 http://localhost:8888/url_gen?change=text => will generate a shortened_url with text as it's last path
 <br>
 for example, www.google.com will be mapped to http://localhost:8888/url_shortener/XXXXXX
