@@ -11,7 +11,7 @@ domain_base = "http://mxlei01.com/url_shortener/"
 
 # A domain base for testing purposes, because when we test, we will use localhost and a port
 # different from the real domain base, where we will route our localhost:8888 through nginx
-test_domain_base = "http://localhost:8888/url_shortener/"
+test_domain_base = "http://localhost:8880/url_shortener/"
 
 # the length of the generated shortened URL digits/letters
 length_url = 6

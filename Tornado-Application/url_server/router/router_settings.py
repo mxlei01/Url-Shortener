@@ -11,4 +11,4 @@ settings = {
 }
 
 # Set Listen Port
-port = 8888
+port = 8880
