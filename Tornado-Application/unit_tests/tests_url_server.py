@@ -1,11 +1,16 @@
 import tornado
 import momoko
 import json
-from url_server.router import router
+import urlparse
+import url_server.router.router_settings as settings
 from tornado.testing import AsyncHTTPTestCase
+from url_server.router import router
 from url_server.database_access_momoko import momoko_settings
 from url_server.database_access_momoko.momoko_query_executor import AsyncMomokoDBQueryExecutor
 from url_server.handler_helpers.sql_cursor_parser import AsyncSQLDataParser
+from random_url_generator.random_url_generator import AsyncRandomURLGenerator
+from random_url_generator.random_url_settings import domain_base
+
 
 class TestURLGenHandler(AsyncHTTPTestCase):
     #   Usage:
@@ -42,14 +47,21 @@ class TestURLGenHandler(AsyncHTTPTestCase):
         # Create a cursor parser to get data from cursor
         self.cursor_parser = AsyncSQLDataParser()
 
-        # Return the application to our HTTP server
+        # Return the application to our HTTP server, with a domain place port replaced
+        # to the current domain port we are using. Since if we kept our old domain, it would be 8888
+        # but Tornado HTTP Server unit tests randomizes a port through bind_used_port(), so we will
+        # need to get that port number and replace our domain_base
         return router.create_application(db=self.db,
-                                         cursor_parser=self.cursor_parser)
+                                         cursor_parser=self.cursor_parser,
+                                         url_generator=AsyncRandomURLGenerator(domain_base=domain_base.replace(str(settings.port), str(self.get_http_port()))))
 
     @tornado.testing.gen_test
     def test_00_url_generation(self):
         # Usage:
-        #       Fetches a generated url from
+        #       Fetches a generated url from the /url_gen, which will give us a json response
+        #       that contains both the shortened url and original url in the body. We will test
+        #       if that shortened_url and original_url exists. Later on then delete the shortened_url
+        #       from the database.
         # Arguments:
         #       None
 
@@ -64,5 +76,42 @@ class TestURLGenHandler(AsyncHTTPTestCase):
         json_response = json.loads(response.body)
         self.assertEqual(json_response["original_url"], url_to_shorten)
 
+        # Test if the shortened_url exists
+        self.assertIsNotNone(json_response["shortened_url"])
+
         # Delete the shortened URL when we are done
         yield self.db.delete_shortened_url(json_response["shortened_url"])
+
+    @tornado.testing.gen_test
+    def test_01_url_retrieve(self):
+        # Usage:
+        #       Fetches a generated url from the /url_gen, which will give us a json response
+        #       that contains both the shortened url and original url in the body. We will visit the page
+        #       using the shortened url. What we should observe is that we should get our original url,
+        #       and then the count visited incremented.
+        # Arguments:
+        #       None
+
+        # A few variables to test on
+        url_to_shorten = "http://www.google.com"
+
+        # Get a response, which contains an url and original url
+        response = yield self.http_client.fetch(self.get_url('/url_gen'), method='POST', body="url=%s" % (url_to_shorten))
+        self.assertEqual(response.code, 200)
+
+        # Test if the response's original_url is what we sent out
+        json_response = json.loads(response.body)
+        self.assertEqual(json_response["original_url"], url_to_shorten)
+
+        # Get a response, which will now contain url_info rows with count data
+        response_info = yield self.http_client.fetch(self.get_url('/url_shortener/%s' % (urlparse.urlsplit(json_response["shortened_url"]).path.split("/")[-1])), method='GET')
+        self.assertEqual(response_info.code, 200)
+
+        # Try to see if the shortened url exists by query it, this will return a cursor
+        get_url_info = yield self.db.get_shortened_url_info(json_response["shortened_url"])
+
+        # We will use the cursor to extract the data using the cursor_parser
+        get_url_info_data = yield self.cursor_parser.submit_get_data(get_url_info)
+
+        # We need to make sure that the count is now +1
+        self.assertEqual(get_url_info_data[0]["count_visited"], 1)

@@ -125,3 +125,27 @@ class AsyncMomokoDBQueryExecutor(object):
         self.logger.info("shortened_url:%s, deleted" % (shortened_url))
 
         raise gen.Return(future)
+
+    @gen.coroutine
+    def update_count(self, shortened_url, count):
+        # Usage:
+        #       This function updates the count of shortened_url access times in url_info table
+        # Arguments:
+        #       shortened_url (string) : the shortened version of the original url
+        #       count         (int)    : count of shortened_url access times
+        # Return:
+        #       future        (cursor) : a future that contains a cursor
+
+        # update statement to delete the shortened url
+        update_count_url_info = """
+            UPDATE url_info
+            set count_visited = %s
+            where shortened_url = %s
+        """
+
+        # Execute the statement using the momoko pool
+        future = yield self.momoko_pool.execute(update_count_url_info, (count, shortened_url))
+
+        self.logger.info("shortened_url:%s, updated with count:%d" % (shortened_url, count))
+
+        raise gen.Return(future)

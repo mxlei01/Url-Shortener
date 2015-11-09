@@ -51,6 +51,7 @@ class AsyncRandomURLGenerator(object):
 
         # Use the urlparse library to join the domain_base and the path to form a url
         url = urlparse.urljoin(self.domain_base, path)
+
         self.logger.info("Generated a URL:%s" % url)
 
         # Return a future containing the data of

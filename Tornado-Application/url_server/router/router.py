@@ -1,5 +1,6 @@
 import tornado.web
 from url_server.handlers.url_gen_handler import URLGenHandler
+from url_server.handlers.url_redirect_handler import URLRedirectHandler
 from url_server.database_access_momoko.momoko_query_executor import AsyncMomokoDBQueryExecutor
 from url_server.handler_helpers.sql_cursor_parser import AsyncSQLDataParser
 from random_url_generator.random_url_generator import AsyncRandomURLGenerator
@@ -16,5 +17,8 @@ def create_application(url_generator=AsyncRandomURLGenerator(), db=AsyncMomokoDB
         (r"/url_gen", URLGenHandler, dict(url_generator=url_generator,
                                           db=db,
                                           cursor_parser=cursor_parser,
-                                          logger=logger))
+                                          logger=logger)),
+        (r'^/url_shortener/\w+', URLRedirectHandler, dict(db=db,
+                                                       cursor_parser=cursor_parser,
+                                                       logger=logger))
     ], **settings)

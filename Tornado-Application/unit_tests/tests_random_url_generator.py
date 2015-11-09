@@ -24,4 +24,4 @@ class TestURLGenerator(AsyncTestCase):
 
         # Test to see if the generated path is equal to the length defined in
         # random_url_settings.py
-        self.assertEqual(len(urlparse.urlsplit(url).path)-1, length_url)
+        self.assertEqual(len(urlparse.urlsplit(url).path.split("/")[-1]), length_url)

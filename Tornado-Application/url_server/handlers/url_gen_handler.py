@@ -33,7 +33,7 @@ class URLGenHandler(tornado.web.RequestHandler):
         # Arguments:
         #       None
         # Return:
-        #       None
+        #       Json : a json format dictionary of shortened url, and original url
 
         # Generate a shortened url
         shortened_url = yield self.url_generator.generate_url()
