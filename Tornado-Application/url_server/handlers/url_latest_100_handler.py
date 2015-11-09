@@ -6,13 +6,14 @@ class URLLatest100Handler(tornado.web.RequestHandler):
     def initialize(self, db, cursor_parser, executor, logger):
         # Usage:
         #       constructor for the URLLatest100Handler class, usage is primary setting
-        #       the cursor_parser and db connector (momoko)
+        #       the cursor_parser and db connector (momoko), and an executor to help
         # Arguments:
         #       db            (object) : a AsyncMomokoDBQueryExecutor object that uses
         #                                the momoko module to read and write to a Postgres db
         #       cursor_parser (object) : a AsyncSQLDataParser object to help with getting data
         #                                from a cursor asynchronously
-        #       executor      (object) : an executor thread pool object
+        #       executor      (object) : an executor thread pool object to help us run
+        #                                synchronous methods
         #       logger        (object) : a logger module
         # Return:
         #       None
@@ -52,5 +53,5 @@ class URLLatest100Handler(tornado.web.RequestHandler):
         #       Array : array of latest 100 (shortened_url, date) tuple in sorted order
 
         # Create an array that returns a shortened_url by getting the "shortened_url" key
-        # inside each dictionary for each element in the array
-        return [(shortened_url["shortened_url"], str(shortened_url["date"])) for shortened_url in latest_100_shorted_url]
+        # inside each dictionary for each element in the array.
+        return [dict(shortened_url=shortened_url["shortened_url"], date=str(shortened_url["date"])) for shortened_url in latest_100_shorted_url]

@@ -3,6 +3,7 @@ import momoko
 import json
 import urlparse
 import datetime
+import random
 import url_server.router.router_settings as settings
 from tornado.testing import AsyncHTTPTestCase
 from url_server.router import router
@@ -128,7 +129,7 @@ class TestURLGenHandler(AsyncHTTPTestCase):
         #       None
 
         # Create a dummy url that we can shorten
-        url_to_shorten = "http://www.google.com"
+        url_to_shorten = "http://www.google.com/"
 
         # Create 100 shortened URLs
         for fetch in xrange(100):
@@ -142,9 +143,39 @@ class TestURLGenHandler(AsyncHTTPTestCase):
         # For one date after another, the first date should always be greater than the second date
         for row in xrange(100):
             if row+1 < 100:
-                time_1 = datetime.datetime.strptime(json_response["latest_100_shortened_urls"][row][1], "%Y-%m-%d %H:%M:%S.%f")
-                time_2 = datetime.datetime.strptime(json_response["latest_100_shortened_urls"][row+1][1], "%Y-%m-%d %H:%M:%S.%f")
+                time_1 = datetime.datetime.strptime(json_response["latest_100_shortened_urls"][row]["date"], "%Y-%m-%d %H:%M:%S.%f")
+                time_2 = datetime.datetime.strptime(json_response["latest_100_shortened_urls"][row+1]["date"], "%Y-%m-%d %H:%M:%S.%f")
                 self.assertTrue(time_1 >= time_2)
+
+        # Delete all the records in the database
+        yield self.db.delete_all_records()
+
+    @tornado.testing.gen_test(timeout=20)
+    def test_03_top_10_domain_30_days(self):
+        # Usage:
+        #       This will generate 100 URLS at random time
+        # Arguments:
+        #       None
+
+        # We will create 10 different domains to test
+        url_to_shorten_array = ["http://www.google%s.com/" % (num) for num in xrange(10)]
+
+        # For each
+        for url_to_shorten in url_to_shorten_array:
+            # Create a random of 30 to 100 short_urls for each url_to_shorten
+            for fetch in xrange(random.randint(30,100)):
+                # Get a response, which contains an url and original url
+                yield self.http_client.fetch(self.get_url('/url_gen'), method='POST', body="url=%s&test=true" % (url_to_shorten))
+
+        # Get a response, which will now contain 100 URLs in order
+        response_info = yield self.http_client.fetch(self.get_url('/url_top_10_domain_30_days'), method='GET')
+        json_response = json.loads(response_info.body)
+
+        # For one date after another, the first date should always be greater than the second date
+        for row in xrange(len(url_to_shorten_array)):
+            if row+1 < len(url_to_shorten_array):
+                self.assertTrue(json_response["latest_100_shortened_urls"][row]["counts"] >=
+                                json_response["latest_100_shortened_urls"][row+1]["counts"])
 
         # Delete all the records in the database
         yield self.db.delete_all_records()

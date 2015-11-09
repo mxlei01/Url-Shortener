@@ -162,7 +162,7 @@ class AsyncMomokoDBQueryExecutor(object):
         # Order by the date field, which is not a varchar in the table, but a date type
         # and limit by 100
         get_latest_100 = """
-            select *
+            select "shortened_url", "date"
             from url_info
             ORDER BY date DESC
             limit 100
@@ -194,5 +194,35 @@ class AsyncMomokoDBQueryExecutor(object):
         future = yield self.momoko_pool.execute(delete_all, ())
 
         self.logger.info("Deleting all records from the url database")
+
+        raise gen.Return(future)
+
+    @gen.coroutine
+    def get_top_10_domain_in_30_days(self):
+        # Usage:
+        #       This function gets the top 10 popular domains in 30 days
+        # Arguments:
+        #       None
+        # Return:
+        #       future        (cursor) : a future that contains a cursor
+
+        # This sql query counts the number of domains where we also
+        # select that the days has to be in interval of 30 days. We then group by the domain
+        # and order by the counts descending, then limit by 10.
+        top_10_domain_in_30_days = """
+            SELECT "domain", count("domain") as "counts"
+            from url_info
+            where "shortened_url" IN (SELECT "shortened_url"
+                                      FROM url_info
+                                      WHERE "date" > (CURRENT_DATE - INTERVAL '30 days'))
+            group by "domain"
+            ORDER BY "counts" DESC
+            limit 10
+        """
+
+        # Execute the statement using the momoko pool
+        future = yield self.momoko_pool.execute(top_10_domain_in_30_days, ())
+
+        self.logger.info("Selecting the top 10 domain in 30 days")
 
         raise gen.Return(future)

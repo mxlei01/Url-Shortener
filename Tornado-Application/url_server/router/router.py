@@ -8,6 +8,7 @@ from url_server.handler_helpers.sql_cursor_parser import AsyncSQLDataParser
 from url_server.handlers.url_gen_handler import URLGenHandler
 from url_server.handlers.url_redirect_handler import URLRedirectHandler
 from url_server.handlers.url_latest_100_handler import URLLatest100Handler
+from url_server.handlers.url_top_10_domain_30_days import URLTop10Domain30Days
 
 # url.py is used to map between different urls to handlers, and also to set different settings
 
@@ -26,5 +27,8 @@ def create_application(url_generator=AsyncRandomURLGenerator(), db=AsyncMomokoDB
         (r'^/url_latest_100', URLLatest100Handler, dict(db=db,
                                                         cursor_parser=cursor_parser,
                                                         executor=executor,
+                                                        logger=logger)),
+        (r'^/url_top_10_domain_30_days', URLTop10Domain30Days, dict(db=db,
+                                                        cursor_parser=cursor_parser,
                                                         logger=logger))
     ], **settings)
