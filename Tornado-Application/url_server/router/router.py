@@ -9,6 +9,7 @@ from url_server.handlers.url_gen_handler import URLGenHandler
 from url_server.handlers.url_redirect_handler import URLRedirectHandler
 from url_server.handlers.url_latest_100_handler import URLLatest100Handler
 from url_server.handlers.url_top_10_domain_30_days import URLTop10Domain30Days
+from url_server.handlers.url_get_url_info import URLGetURLInfo
 
 # url.py is used to map between different urls to handlers, and also to set different settings
 
@@ -29,6 +30,9 @@ def create_application(url_generator=AsyncRandomURLGenerator(), db=AsyncMomokoDB
                                                         executor=executor,
                                                         logger=logger)),
         (r'^/url_top_10_domain_30_days', URLTop10Domain30Days, dict(db=db,
-                                                        cursor_parser=cursor_parser,
-                                                        logger=logger))
+                                                                    cursor_parser=cursor_parser,
+                                                                    logger=logger)),
+        (r'^/url_info', URLGetURLInfo, dict(db=db,
+                                            cursor_parser=cursor_parser,
+                                            logger=logger))
     ], **settings)

@@ -167,7 +167,7 @@ class TestURLGenHandler(AsyncHTTPTestCase):
                 # Get a response, which contains an url and original url
                 yield self.http_client.fetch(self.get_url('/url_gen'), method='POST', body="url=%s&test=true" % (url_to_shorten))
 
-        # Get a response, which will now contain 100 URLs in order
+        # Get a response, which will now contain 10 domains in order
         response_info = yield self.http_client.fetch(self.get_url('/url_top_10_domain_30_days'), method='GET')
         json_response = json.loads(response_info.body)
 
@@ -179,3 +179,31 @@ class TestURLGenHandler(AsyncHTTPTestCase):
 
         # Delete all the records in the database
         yield self.db.delete_all_records()
+
+    @tornado.testing.gen_test
+    def test_04_get_url_info(self):
+        # Usage:
+        #       Fetches a generated url from the /url_gen, and then we will url_info to get
+        #       the data, and see if the dictionary is not empty.
+        # Arguments:
+        #       None
+
+        # A few variables to test on
+        url_to_shorten = "http://www.google.com"
+
+        # Get a response, which contains an url and original url
+        response = yield self.http_client.fetch(self.get_url('/url_gen'), method='POST', body="url=%s" % (url_to_shorten))
+
+        # Test if the response's original_url is what we sent out
+        json_response = json.loads(response.body)
+
+        # Get a response, which will now contain 100 URLs in order
+        response_info = yield self.http_client.fetch(self.get_url('/url_info?shortened_url=%s' % ((json_response["shortened_url"]))),
+                                                     method='GET')
+        json_response_info = json.loads(response_info.body)
+
+        # See if the returned array is not none
+        self.assertIsNotNone(json_response_info)
+
+        # Delete the shortened URL when we are done
+        yield self.db.delete_shortened_url(json_response["shortened_url"])
