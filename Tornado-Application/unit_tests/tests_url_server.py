@@ -2,6 +2,7 @@ import tornado
 import momoko
 import json
 import urlparse
+import datetime
 import url_server.router.router_settings as settings
 from tornado.testing import AsyncHTTPTestCase
 from url_server.router import router
@@ -9,7 +10,7 @@ from url_server.database_access_momoko import momoko_settings
 from url_server.database_access_momoko.momoko_query_executor import AsyncMomokoDBQueryExecutor
 from url_server.handler_helpers.sql_cursor_parser import AsyncSQLDataParser
 from random_url_generator.random_url_generator import AsyncRandomURLGenerator
-from random_url_generator.random_url_settings import domain_base
+from random_url_generator.random_url_settings import test_domain_base
 
 
 class TestURLGenHandler(AsyncHTTPTestCase):
@@ -53,7 +54,7 @@ class TestURLGenHandler(AsyncHTTPTestCase):
         # need to get that port number and replace our domain_base
         return router.create_application(db=self.db,
                                          cursor_parser=self.cursor_parser,
-                                         url_generator=AsyncRandomURLGenerator(domain_base=domain_base.replace(str(settings.port), str(self.get_http_port()))))
+                                         url_generator=AsyncRandomURLGenerator(domain_base=test_domain_base.replace(str(settings.port), str(self.get_http_port()))))
 
     @tornado.testing.gen_test
     def test_00_url_generation(self):
@@ -96,7 +97,7 @@ class TestURLGenHandler(AsyncHTTPTestCase):
         url_to_shorten = "http://www.google.com"
 
         # Get a response, which contains an url and original url
-        response = yield self.http_client.fetch(self.get_url('/url_gen'), method='POST', body="url=%s" % (url_to_shorten))
+        response = yield self.http_client.fetch(self.get_url('/url_gen'), method='POST', body="url=%s&test=true" % (url_to_shorten))
         self.assertEqual(response.code, 200)
 
         # Test if the response's original_url is what we sent out
@@ -115,3 +116,35 @@ class TestURLGenHandler(AsyncHTTPTestCase):
 
         # We need to make sure that the count is now +1
         self.assertEqual(get_url_info_data[0]["count_visited"], 1)
+
+        # Delete the shortened URL when we are done
+        yield self.db.delete_shortened_url(json_response["shortened_url"])
+
+    @tornado.testing.gen_test
+    def test_02_url_latest_100_fetch(self):
+        # Usage:
+        #       This will generate 100 URLS at random time
+        # Arguments:
+        #       None
+
+        # Create a dummy url that we can shorten
+        url_to_shorten = "http://www.google.com"
+
+        # Create 100 shortened URLs
+        for fetch in xrange(100):
+            # Get a response, which contains an url and original url
+            yield self.http_client.fetch(self.get_url('/url_gen'), method='POST', body="url=%s&test=true" % (url_to_shorten))
+
+        # Get a response, which will now contain 100 URLs in order
+        response_info = yield self.http_client.fetch(self.get_url('/url_latest_100'), method='GET')
+        json_response = json.loads(response_info.body)
+
+        # For one date after another, the first date should always be greater than the second date
+        for row in xrange(100):
+            if row+1 < 100:
+                time_1 = datetime.datetime.strptime(json_response["latest_100_shortened_urls"][row][1], "%Y-%m-%d %H:%M:%S.%f")
+                time_2 = datetime.datetime.strptime(json_response["latest_100_shortened_urls"][row+1][1], "%Y-%m-%d %H:%M:%S.%f")
+                self.assertTrue(time_1 >= time_2)
+
+        # Delete all the records in the database
+        yield self.db.delete_all_records()

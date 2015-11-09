@@ -1,6 +1,7 @@
 import tornado.web
 import datetime
 import urlparse
+import random
 from tornado import gen
 from tornado.escape import json_encode
 
@@ -53,9 +54,14 @@ class URLGenHandler(tornado.web.RequestHandler):
         url = urlparse.urlparse(self.get_argument('url'))
 
         # Insert the new mapping into the database in both url, and url_info
+        # if test is enabled, then we will swap the day with a random integer from 1 to 25
+        if 'test' in self.request.body:
+            date = datetime.datetime.now().replace(day=random.randint(1, 25)).isoformat()
+        else:
+            date = datetime.datetime.now().isoformat()
         yield self.db.insert_new_mapping(shortened_url,
                                          self.get_argument('url'),
-                                         datetime.datetime.now().isoformat(),
+                                         date,
                                          '%s://%s/'%(url.scheme, url.netloc))
 
         # Return a json format data that includes the shortened url and

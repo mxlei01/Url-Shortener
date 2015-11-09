@@ -149,3 +149,50 @@ class AsyncMomokoDBQueryExecutor(object):
         self.logger.info("shortened_url:%s, updated with count:%d" % (shortened_url, count))
 
         raise gen.Return(future)
+
+    @gen.coroutine
+    def get_latest_100_shortened_urls(self):
+        # Usage:
+        #       This function gets the latest 100 shortened urls
+        # Arguments:
+        #       None
+        # Return:
+        #       future        (cursor) : a future that contains a cursor
+
+        # Order by the date field, which is not a varchar in the table, but a date type
+        # and limit by 100
+        get_latest_100 = """
+            select *
+            from url_info
+            ORDER BY date DESC
+            limit 100
+        """
+
+        # Execute the statement using the momoko pool
+        future = yield self.momoko_pool.execute(get_latest_100, ())
+
+        self.logger.info("Getting Latest 100 shortened URLs")
+
+        raise gen.Return(future)
+
+    @gen.coroutine
+    def delete_all_records(self):
+        # Usage:
+        #       This function delete all records in the database
+        # Arguments:
+        #       None
+        # Return:
+        #       future        (cursor) : a future that contains a cursor
+
+        # Order by the date field, which is not a varchar in the table, but a date type
+        # and limit by 100
+        delete_all = """
+            DELETE from url
+        """
+
+        # Execute the statement using the momoko pool
+        future = yield self.momoko_pool.execute(delete_all, ())
+
+        self.logger.info("Deleting all records from the url database")
+
+        raise gen.Return(future)

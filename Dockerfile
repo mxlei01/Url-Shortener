@@ -54,7 +54,7 @@ RUN /etc/init.d/postgresql start &&\
 	(\
 	shortened_url varchar (255),\
 	count_visited int,\
-	date date,\
+	date timestamp,\
 	domain varchar (255),\
 	FOREIGN KEY (shortened_url) REFERENCES url(shortened_url)\
 	ON DELETE CASCADE)"
