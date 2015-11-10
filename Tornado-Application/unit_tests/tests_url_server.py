@@ -4,14 +4,11 @@ import json
 import urlparse
 import datetime
 import random
-import url_server.router.router_settings as settings
 from tornado.testing import AsyncHTTPTestCase
 from url_server.router import router
 from url_server.database_access_momoko import momoko_settings
 from url_server.database_access_momoko.momoko_query_executor import AsyncMomokoDBQueryExecutor
 from url_server.handler_helpers.sql_cursor_parser import AsyncSQLDataParser
-from random_url_generator.random_url_generator import AsyncRandomURLGenerator
-from random_url_generator.random_url_settings import test_domain_base
 
 class TestURLGenHandler(AsyncHTTPTestCase):
     #   Usage:
@@ -48,13 +45,9 @@ class TestURLGenHandler(AsyncHTTPTestCase):
         # Create a cursor parser to get data from cursor
         self.cursor_parser = AsyncSQLDataParser()
 
-        # Return the application to our HTTP server, with a domain place port replaced
-        # to the current domain port we are using. Since if we kept our old domain, it would be 8888
-        # but Tornado HTTP Server unit tests randomizes a port through bind_used_port(), so we will
-        # need to get that port number and replace our domain_base
+        # Return the application to our HTTP server.
         return router.create_application(db=self.db,
-                                         cursor_parser=self.cursor_parser,
-                                         url_generator=AsyncRandomURLGenerator(domain_base=test_domain_base.replace(str(settings.port), str(self.get_http_port()))))
+                                         cursor_parser=self.cursor_parser)
 
     @tornado.testing.gen_test
     def test_00_url_generation(self):

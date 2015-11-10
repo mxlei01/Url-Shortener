@@ -12,3 +12,6 @@ settings = {
 
 # Set Listen Port
 port = 8880
+
+# Path to set the url of the url shortener
+url_shortener_path = "/url_shortener"

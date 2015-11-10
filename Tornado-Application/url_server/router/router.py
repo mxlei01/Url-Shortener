@@ -1,4 +1,5 @@
 import tornado.web
+import router_settings
 from random_url_generator.random_url_generator import AsyncRandomURLGenerator
 from router_settings import settings
 from logger.logger import logger as log
@@ -22,9 +23,9 @@ def create_application(url_generator=AsyncRandomURLGenerator(), db=AsyncMomokoDB
                                           db=db,
                                           cursor_parser=cursor_parser,
                                           logger=logger)),
-        (r'^/url_shortener/\w+', URLRedirectHandler, dict(db=db,
-                                                          cursor_parser=cursor_parser,
-                                                          logger=logger)),
+        (r'^%s/\w+' % router_settings.url_shortener_path, URLRedirectHandler, dict(db=db,
+                                                                                   cursor_parser=cursor_parser,
+                                                                                   logger=logger)),
         (r'^/url_latest_100', URLLatest100Handler, dict(db=db,
                                                         cursor_parser=cursor_parser,
                                                         executor=executor,

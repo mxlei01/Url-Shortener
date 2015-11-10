@@ -15,7 +15,7 @@ class AsyncRandomURLGenerator(object):
 
     def __init__(self,
                  random_base=random_url_settings.random_base,
-                 domain_base=random_url_settings.domain_base,
+                 domain_base=None,
                  length_url=random_url_settings.length_url,
                  logger=logger,
                  executor=executor):
@@ -74,3 +74,13 @@ class AsyncRandomURLGenerator(object):
         #       URL (future) : a future containing the result of the url shortening
 
         return ''.join([random.choice(self.random_base) for _ in xrange(self.length_url)])
+
+    def set_domain_base(self, domain_base):
+        # Usage:
+        #       Setter used to set the domain base
+        # Arguments:
+        #       domain_base : the domain of the current server url
+        # Return:
+        #       None
+
+        self.domain_base = domain_base

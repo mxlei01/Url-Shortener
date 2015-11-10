@@ -40,6 +40,8 @@ class URLGenHandler(tornado.web.RequestHandler):
         # See if one of the parameters include a "change" parameter
         change_to_url = self.get_argument('change', None)
 
+        self.url_generator.set_domain_base(self.request.protocol + "://" + self.request.host + "/url_shortener/")
+
         # Generate a shortened url
         shortened_url = yield self.url_generator.generate_url(change_to_url)
 
