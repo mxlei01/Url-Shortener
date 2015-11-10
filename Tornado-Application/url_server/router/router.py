@@ -16,16 +16,18 @@ from url_server.handlers.url_get_url_info import URLGetURLInfo
 
 # application is a tornado web application object, that can be used to set handlers, and settings
 def create_application(url_generator=AsyncRandomURLGenerator(), db=AsyncMomokoDBQueryExecutor(),
-                       cursor_parser=AsyncSQLDataParser(), logger=log, executor=executors):
+                       cursor_parser=AsyncSQLDataParser(), logger=log, executor=executors,
+                       url_shortener_path=router_settings.url_shortener_path):
     return tornado.web.Application([
         # Map the "/" url to main handler
         (r"/url_gen", URLGenHandler, dict(url_generator=url_generator,
                                           db=db,
                                           cursor_parser=cursor_parser,
+                                          url_shortener=url_shortener_path,
                                           logger=logger)),
-        (r'^%s/\w+' % router_settings.url_shortener_path, URLRedirectHandler, dict(db=db,
-                                                                                   cursor_parser=cursor_parser,
-                                                                                   logger=logger)),
+        (r'^%s\w+' % url_shortener_path, URLRedirectHandler, dict(db=db,
+                                                                                  cursor_parser=cursor_parser,
+                                                                                  logger=logger)),
         (r'^/url_latest_100', URLLatest100Handler, dict(db=db,
                                                         cursor_parser=cursor_parser,
                                                         executor=executor,

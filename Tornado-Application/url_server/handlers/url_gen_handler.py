@@ -6,7 +6,7 @@ from tornado import gen
 from tornado.escape import json_encode
 
 class URLGenHandler(tornado.web.RequestHandler):
-    def initialize(self, url_generator, db, cursor_parser, logger):
+    def initialize(self, url_generator, db, cursor_parser, url_shortener, logger):
         # Usage:
         #       constructor for the URLGenHandler class, usage is primary setting
         #       the url_generator and db connector (momoko)
@@ -15,6 +15,7 @@ class URLGenHandler(tornado.web.RequestHandler):
         #                                executors to generate a shortened URL
         #       db            (object) : a AsyncMomokoDBQueryExecutor object that uses
         #                                the momoko module to read and write to a Postgres db
+        #       url_shortener (string) : path of the url_shortener
         #       cursor_parser (object) : a AsyncSQLDataParser object to help with getting data
         #                                from a cursor asynchronously
         #       logger        (object) : a logger module
@@ -24,6 +25,7 @@ class URLGenHandler(tornado.web.RequestHandler):
         self.url_generator = url_generator
         self.db = db
         self.cursor_parser = cursor_parser
+        self.url_shortener = url_shortener
         self.logger = logger
 
     @gen.coroutine
@@ -40,7 +42,8 @@ class URLGenHandler(tornado.web.RequestHandler):
         # See if one of the parameters include a "change" parameter
         change_to_url = self.get_argument('change', None)
 
-        self.url_generator.set_domain_base(self.request.protocol + "://" + self.request.host + "/url_shortener/")
+        # Set the domain path so that this path is appended with a random url afterwards
+        self.url_generator.set_domain_base(self.request.protocol + "://" + self.request.host + self.url_shortener)
 
         # Generate a shortened url
         shortened_url = yield self.url_generator.generate_url(change_to_url)

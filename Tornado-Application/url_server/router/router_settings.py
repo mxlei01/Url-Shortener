@@ -14,4 +14,4 @@ settings = {
 port = 8880
 
 # Path to set the url of the url shortener
-url_shortener_path = "/url_shortener"
+url_shortener_path = "/url_shortener/"
