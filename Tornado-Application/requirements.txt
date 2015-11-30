@@ -2,3 +2,4 @@ tornado
 futures
 psycopg2
 momoko
+coveralls
