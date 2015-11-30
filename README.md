@@ -1,6 +1,5 @@
-[![Code Health](https://landscape.io/github/mxlei01/Facebook-Group-Sentiment-Analysis/master/landscape.svg?style=flat)](https://landscape.io/github/mxlei01/Facebook-Group-Sentiment-Analysis/master)
-
 [![Build Status](https://travis-ci.org/mxlei01/Url-Shortener.svg)](https://travis-ci.org/mxlei01/Url-Shortener)
+[![Code Health](https://landscape.io/github/mxlei01/Facebook-Group-Sentiment-Analysis/master/landscape.svg?style=flat)](https://landscape.io/github/mxlei01/Facebook-Group-Sentiment-Analysis/master)
 
 # url-shortener
 A server side application that shortens url
