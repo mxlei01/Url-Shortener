@@ -1,6 +1,4 @@
-<a href="https://landscape.io/github/mxlei01/Url-Shortener/master">
-  <img alt="Code Health" src="https://landscape.io/github/mxlei01/Url-Shortener/master/landscape.svg?style=flat"/>
-</a>
+[![Code Health](https://landscape.io/github/mxlei01/Facebook-Group-Sentiment-Analysis/master/landscape.svg?style=flat)](https://landscape.io/github/mxlei01/Facebook-Group-Sentiment-Analysis/master)
 
 [![Build Status](https://travis-ci.org/mxlei01/Url-Shortener.svg)](https://travis-ci.org/mxlei01/Url-Shortener)
 
