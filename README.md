@@ -1,3 +1,7 @@
+<a href="https://landscape.io/github/mxlei01/Url-Shortener/master">
+  <img alt="Code Health" src="https://landscape.io/github/mxlei01/Url-Shortener/master/landscape.svg?style=flat"/>
+</a>
+
 [![Build Status](https://travis-ci.org/mxlei01/Url-Shortener.svg)](https://travis-ci.org/mxlei01/Url-Shortener)
 
 # url-shortener
