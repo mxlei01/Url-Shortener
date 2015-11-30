@@ -2,17 +2,17 @@ language: python
 
 branches:
   only:
-  - master
+    - master
 
 sudo: required
 
 services:
-- docker
+  - docker
 
 notifications:
   webhooks:
     urls:
-    - https://api.opsgenie.com/v1/json/travisci?apiKey=5a20d401-9c4b-4083-b22d-afeb70aad486
+      - https://api.opsgenie.com/v1/json/travisci?apiKey=5a20d401-9c4b-4083-b22d-afeb70aad486
     on_success: always
     on_failure: always
     on_start: never
@@ -20,13 +20,14 @@ notifications:
     secure: KbPKtmi89Q6iVi8Kz9SmFKJcclEJWmnVBz0FayLpMv6MeoXXTMpftColoDaAlVKhMqcp9YFLLV7TCtu5liCzHiuMmrsDbo6UguoOr2IY7gxk9Q4KX7JOwur/ItyRVNQhFgxYC8A6wfZ1Xatxml858kSKHpbO687n5vziIWRCvPKfwxc2ubp5DQpL9QkPSDRE1EFzxSjupYsmnV6kpnczFp2eI8uZFIfpWiv82oBVjtU0ZFEXx4Pde2/qh+ucvF2ZWYW61W2DTCddC6pd721LJ3wkmzZikn/dosF4/vu+hByIDosJ1kUDt859LxcKRG96auLsvZjgM6Olbnt+b2vIQJCWcQBwFKvQztgLYDiwZjlPeo3q9GTxg+F7ZZcmaesJx9BMKdCdu202SZSubraeBxh9HJc/TDMCybX59tPYNeOeU3tSxLIzqpjtAeZASzFVF81OXhiaXe5HoHb1rPKojcAqnWhy3XTj8fbiv81F74dO/jnO/9cQT9bXOgu9N/deIIcc7dyL8Xwx2BVZzjRaQfKm7x8f6GNvVI00mmQziafcor0oe2L4IvJyyJmxvZzcON8jPTrA0Omou8bf0IJsbTitPYEu5PsrVfuV5ZlQJGN8tj4PGqMPLSchCcY2+Rs822fUxWnhPgFiaANsarJvFvJ153Lk0vE4dPSWiwJzVGM=
 
 before_install:
-- docker build -t  mxlei01/url-shortener .
+  - docker build -t  mxlei01/url-shortener .
+  - pip install coveralls
 
 script: 
-- docker run mxlei01/url-shortener /bin/sh -c "su - postgres -c '/usr/lib/postgresql/9.4/bin/postgres -D /var/lib/postgresql/9.4/main -c config_file=/etc/postgresql/9.4/main/postgresql.conf &' && sleep 60 && cd /application/Tornado-Application && python -m tornado.test.runtests unit_tests.run_all_tests"
-- docker cp `docker ps -alq`:/application/Tornado-Application/unit_tests .
+  - docker run mxlei01/url-shortener /bin/sh -c "su - postgres -c '/usr/lib/postgresql/9.4/bin/postgres -D /var/lib/postgresql/9.4/main -c config_file=/etc/postgresql/9.4/main/postgresql.conf &' && sleep 60 && cd /application/Tornado-Application && python -m tornado.test.runtests unit_tests.run_all_tests"
+  - docker cp `docker ps -alq`:/application/Tornado-Application/unit_tests .
 
 after_success:
-- coveralls
-- docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-- docker push mxlei01/url-shortener
+  - coveralls
+  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker push mxlei01/url-shortener
