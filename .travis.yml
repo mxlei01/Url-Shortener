@@ -23,11 +23,10 @@ before_install:
   - docker build -t  mxlei01/url-shortener .
   - pip install coveralls
 
-script:
-  - mkdir tests
-  - docker run mxlei01/url-shortener /bin/sh -c "su - postgres -c '/usr/lib/postgresql/9.4/bin/postgres -D /var/lib/postgresql/9.4/main -c config_file=/etc/postgresql/9.4/main/postgresql.conf &' && sleep 60 && cd /application/Tornado-Application && coverage run -m tornado.test.runtests unit_tests.run_all_tests && cd && cp /application/Tornado-Application/unit_tests/* /application/Tornado-Application/unit_tests_results" -v tests:/application/Tornado-Application/unit_tests_results
-  #- mv tests/.coverage .
-  - ls -lart tests
+script: 
+  - docker run -it mxlei01/url-shortener /bin/sh -c "su - postgres -c '/usr/lib/postgresql/9.4/bin/postgres -D /var/lib/postgresql/9.4/main -c config_file=/etc/postgresql/9.4/main/postgresql.conf &' && sleep 60 && cd /application/Tornado-Application && coverage run -m tornado.test.runtests unit_tests.run_all_tests" 
+  - docker cp `docker ps -alq`:/application/Tornado-Application/unit_tests Tornado-Application/unit_tests
+  - ls -lart Tornado-Application/unit_tests
 
 after_success:
   - coveralls
