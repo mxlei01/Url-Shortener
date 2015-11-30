@@ -2,8 +2,7 @@ import tornado
 import tornado.ioloop
 import tornado.web
 import url_server.router.router_settings as settings
-from url_server.database_access_momoko import momoko_pool
-from url_server.router.router import application
+from url_server.router.router import create_application
 from logger.logger import logger as logger
 
 # main.py is the main access point of the tornado app, to run the application, just run "python main.py"
@@ -12,6 +11,7 @@ from logger.logger import logger as logger
 # http://localhost:settings.port on any browser, or using python requests library
 if __name__ == "__main__":
     # Set the application to listen to port 8888
+    application = create_application()
     application.listen(settings.port)
 
     # Get the current IOLoop

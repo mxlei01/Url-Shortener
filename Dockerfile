@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:12.04
 
 #===========================Start Update Ubuntu================================
 RUN apt-get -y update 
@@ -54,7 +54,7 @@ RUN /etc/init.d/postgresql start &&\
 	(\
 	shortened_url varchar (255),\
 	count_visited int,\
-	date date,\
+	date timestamp,\
 	domain varchar (255),\
 	FOREIGN KEY (shortened_url) REFERENCES url(shortened_url)\
 	ON DELETE CASCADE)"
@@ -77,6 +77,7 @@ VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 USER root
 RUN mkdir /application
 COPY Tornado-Application /application/Tornado-Application
+EXPOSE 8880
 #=====Create a folder, and copy our application into the application folder====
 
 #===========================Installing Supervisord=============================

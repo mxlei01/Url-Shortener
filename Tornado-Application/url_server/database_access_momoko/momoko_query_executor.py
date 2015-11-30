@@ -125,3 +125,104 @@ class AsyncMomokoDBQueryExecutor(object):
         self.logger.info("shortened_url:%s, deleted" % (shortened_url))
 
         raise gen.Return(future)
+
+    @gen.coroutine
+    def update_count(self, shortened_url, count):
+        # Usage:
+        #       This function updates the count of shortened_url access times in url_info table
+        # Arguments:
+        #       shortened_url (string) : the shortened version of the original url
+        #       count         (int)    : count of shortened_url access times
+        # Return:
+        #       future        (cursor) : a future that contains a cursor
+
+        # update statement to delete the shortened url
+        update_count_url_info = """
+            UPDATE url_info
+            set count_visited = %s
+            where shortened_url = %s
+        """
+
+        # Execute the statement using the momoko pool
+        future = yield self.momoko_pool.execute(update_count_url_info, (count, shortened_url))
+
+        self.logger.info("shortened_url:%s, updated with count:%d" % (shortened_url, count))
+
+        raise gen.Return(future)
+
+    @gen.coroutine
+    def get_latest_100_shortened_urls(self):
+        # Usage:
+        #       This function gets the latest 100 shortened urls
+        # Arguments:
+        #       None
+        # Return:
+        #       future        (cursor) : a future that contains a cursor
+
+        # Order by the date field, which is not a varchar in the table, but a date type
+        # and limit by 100
+        get_latest_100 = """
+            select "shortened_url", "date"
+            from url_info
+            ORDER BY date DESC
+            limit 100
+        """
+
+        # Execute the statement using the momoko pool
+        future = yield self.momoko_pool.execute(get_latest_100, ())
+
+        self.logger.info("Getting Latest 100 shortened URLs")
+
+        raise gen.Return(future)
+
+    @gen.coroutine
+    def delete_all_records(self):
+        # Usage:
+        #       This function delete all records in the database
+        # Arguments:
+        #       None
+        # Return:
+        #       future        (cursor) : a future that contains a cursor
+
+        # Order by the date field, which is not a varchar in the table, but a date type
+        # and limit by 100
+        delete_all = """
+            DELETE from url
+        """
+
+        # Execute the statement using the momoko pool
+        future = yield self.momoko_pool.execute(delete_all, ())
+
+        self.logger.info("Deleting all records from the url database")
+
+        raise gen.Return(future)
+
+    @gen.coroutine
+    def get_top_10_domain_in_30_days(self):
+        # Usage:
+        #       This function gets the top 10 popular domains in 30 days
+        # Arguments:
+        #       None
+        # Return:
+        #       future        (cursor) : a future that contains a cursor
+
+        # This sql query counts the number of domains where we also
+        # select that the days has to be in interval of 30 days. We then group by the domain
+        # and order by the counts descending, then limit by 10.
+        top_10_domain_in_30_days = """
+            SELECT "domain", count("domain") as "counts"
+            from url_info
+            where "shortened_url" IN (SELECT "shortened_url"
+                                      FROM url_info
+                                      WHERE "date" > (CURRENT_DATE - INTERVAL '30 days'))
+            group by "domain"
+            ORDER BY "counts" DESC
+            limit 10
+        """
+
+        # Execute the statement using the momoko pool
+        future = yield self.momoko_pool.execute(top_10_domain_in_30_days, ())
+
+        self.logger.info("Selecting the top 10 domain in 30 days")
+
+        raise gen.Return(future)

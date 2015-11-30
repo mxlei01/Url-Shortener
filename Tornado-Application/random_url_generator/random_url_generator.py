@@ -15,7 +15,7 @@ class AsyncRandomURLGenerator(object):
 
     def __init__(self,
                  random_base=random_url_settings.random_base,
-                 domain_base=random_url_settings.domain_base,
+                 domain_base=None,
                  length_url=random_url_settings.length_url,
                  logger=logger,
                  executor=executor):
@@ -37,20 +37,28 @@ class AsyncRandomURLGenerator(object):
         self.executor = executor
 
     @gen.coroutine
-    def generate_url(self):
+    def generate_url(self, change_to_url=None):
         # Usage:
         #       Function will use an executor to create a random path
         #       Then attaching it with domain_base using urlparse library.
         # Arguments:
-        #       None
+        #       change_to_url (string) : a string containing a string that the user
+        #                                want to use instead of a randomized string for
+        #                                shortened url
         # Return:
         #       URL (future) : a future containing the result of the url shortening
 
-        # The path variable now contains a randomized string of self.length_url length
-        path = yield self.executor.submit(self.generate_random_path)
+        # See if the change_to_url exists, if it exists, then we want to use the
+        # user's url instead of generating one ourselves
+        if change_to_url:
+            path = change_to_url
+        else:
+            # The path variable now contains a randomized string of self.length_url length
+            path = yield self.executor.submit(self.generate_random_path)
 
         # Use the urlparse library to join the domain_base and the path to form a url
         url = urlparse.urljoin(self.domain_base, path)
+
         self.logger.info("Generated a URL:%s" % url)
 
         # Return a future containing the data of
@@ -66,3 +74,13 @@ class AsyncRandomURLGenerator(object):
         #       URL (future) : a future containing the result of the url shortening
 
         return ''.join([random.choice(self.random_base) for _ in xrange(self.length_url)])
+
+    def set_domain_base(self, domain_base):
+        # Usage:
+        #       Setter used to set the domain base
+        # Arguments:
+        #       domain_base : the domain of the current server url
+        # Return:
+        #       None
+
+        self.domain_base = domain_base

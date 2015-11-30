@@ -1,13 +1,16 @@
 import tornado
 import datetime
 import momoko
-from tornado.ioloop import IOLoop
 from tornado.testing import AsyncTestCase
 from url_server.database_access_momoko import momoko_settings
 from url_server.database_access_momoko.momoko_query_executor import AsyncMomokoDBQueryExecutor
 from url_server.handler_helpers.sql_cursor_parser import AsyncSQLDataParser
 
 class TestDB(AsyncTestCase):
+    #   Usage:
+    #       Tests for database functions, such as read/write. This class inherits from the
+    #       AsyncTestCase class in order to test coroutines, and futures.
+
     def setUp(self):
         # Usage:
         #       Constructor for TestDB, primarly for setting up the momoko pool, and cursor parser

@@ -4,7 +4,7 @@ import tornado.ioloop
 
 # momoko_pool.py contains the momoko_db_connection which can connect to a postgres database
 
-# This will create a momoko db connection using dsn, size, and ioloop
+# This will create a momoko db connection to connect to postgres using dsn, size, and ioloop
 #   dsn    : a dsn string that contains a few parameters we need to setup in order to connect to
 #            postgres,
 #              dbname   = database name
