@@ -9,6 +9,9 @@ sudo: required
 services:
   - docker
 
+install:
+  - pip install -r Tornado-Application/requirements.txt
+
 notifications:
   webhooks:
     urls:
