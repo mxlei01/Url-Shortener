@@ -25,6 +25,7 @@ notifications:
 before_install:
   #- sudo apt-get install libpq-dev python-dev
   - docker build -t  mxlei01/url-shortener .
+  - docker cp -a .git /application/Tornado-Application
 
 script: 
   - docker run -it mxlei01/url-shortener /bin/sh -c "su - postgres -c '/usr/lib/postgresql/9.4/bin/postgres -D /var/lib/postgresql/9.4/main -c config_file=/etc/postgresql/9.4/main/postgresql.conf &' && sleep 60 && cd /application/Tornado-Application && coverage run -m tornado.test.runtests unit_tests.run_all_tests && COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN coveralls" 
@@ -34,7 +35,7 @@ script:
   #- sudo cp -R test_results/Tornado-Application/* /application/Tornado-Application
   #- sudo cp test_results/Tornado-Application/.coverage /application/Tornado-Application
   #- sudo cp -R .git /application && cd /application/Tornado-Application
-  #- sudo cp -R /usr/local/lib/python2.7/dist-packages/* /usr/local/lib/python2.7/dist-packages/
+  #- sudo cp -R -n /usr/local/lib/python2.7/dist-packages/* /usr/local/lib/python2.7/dist-packages/
 
 after_success:
   #- coveralls
