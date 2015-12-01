@@ -25,10 +25,9 @@ notifications:
 before_install:
   #- sudo apt-get install libpq-dev python-dev
   - docker build -t  mxlei01/url-shortener .
-  - docker cp .git `docker ps -alq`:/application
 
 script: 
-  - docker run -it mxlei01/url-shortener /bin/sh -c "su - postgres -c '/usr/lib/postgresql/9.4/bin/postgres -D /var/lib/postgresql/9.4/main -c config_file=/etc/postgresql/9.4/main/postgresql.conf &' && sleep 60 && cd /application/Tornado-Application && coverage run -m tornado.test.runtests unit_tests.run_all_tests && COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN coveralls" 
+  - docker run -it mxlei01/url-shortener /bin/sh -c "su - postgres -c '/usr/lib/postgresql/9.4/bin/postgres -D /var/lib/postgresql/9.4/main -c config_file=/etc/postgresql/9.4/main/postgresql.conf &' && sleep 60 && cd /application/Tornado-Application && coverage run -m tornado.test.runtests unit_tests.run_all_tests && git clone https://github.com/mxlei01/Url-Shortener.git && cp -R ./Url-Shortener/.git . && COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN coveralls" 
   #- mkdir test_results
   #- docker cp `docker ps -alq`:/application/Tornado-Application test_results
   #- sudo mkdir /application && sudo mkdir /application/Tornado-Application
