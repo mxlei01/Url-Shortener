@@ -28,7 +28,9 @@ script:
   - mkdir test_results
   - docker cp `docker ps -alq`:/application/Tornado-Application test_results
   - ls -lart test_results/Tornado-Application/
-  - cp test_results/Tornado-Application/.coverage Tornado-Application
+  - rm -rf Tornado-Application
+  - cp -R test_results/Tornado-Application Tornado-Application && cd Tornado-Application
+  - ls -lart Tornado-Application
 
 after_success:
   - coveralls
