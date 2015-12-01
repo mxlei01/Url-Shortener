@@ -9,9 +9,6 @@ sudo: required
 services:
   - docker
 
-#install:
-  #- pip install -r Tornado-Application/requirements.txt
-
 notifications:
   webhooks:
     urls:
@@ -23,20 +20,11 @@ notifications:
     secure: KbPKtmi89Q6iVi8Kz9SmFKJcclEJWmnVBz0FayLpMv6MeoXXTMpftColoDaAlVKhMqcp9YFLLV7TCtu5liCzHiuMmrsDbo6UguoOr2IY7gxk9Q4KX7JOwur/ItyRVNQhFgxYC8A6wfZ1Xatxml858kSKHpbO687n5vziIWRCvPKfwxc2ubp5DQpL9QkPSDRE1EFzxSjupYsmnV6kpnczFp2eI8uZFIfpWiv82oBVjtU0ZFEXx4Pde2/qh+ucvF2ZWYW61W2DTCddC6pd721LJ3wkmzZikn/dosF4/vu+hByIDosJ1kUDt859LxcKRG96auLsvZjgM6Olbnt+b2vIQJCWcQBwFKvQztgLYDiwZjlPeo3q9GTxg+F7ZZcmaesJx9BMKdCdu202SZSubraeBxh9HJc/TDMCybX59tPYNeOeU3tSxLIzqpjtAeZASzFVF81OXhiaXe5HoHb1rPKojcAqnWhy3XTj8fbiv81F74dO/jnO/9cQT9bXOgu9N/deIIcc7dyL8Xwx2BVZzjRaQfKm7x8f6GNvVI00mmQziafcor0oe2L4IvJyyJmxvZzcON8jPTrA0Omou8bf0IJsbTitPYEu5PsrVfuV5ZlQJGN8tj4PGqMPLSchCcY2+Rs822fUxWnhPgFiaANsarJvFvJ153Lk0vE4dPSWiwJzVGM=
 
 before_install:
-  #- sudo apt-get install libpq-dev python-dev
   - docker build -t  mxlei01/url-shortener .
 
 script: 
   - docker run -it mxlei01/url-shortener /bin/sh -c "su - postgres -c '/usr/lib/postgresql/9.4/bin/postgres -D /var/lib/postgresql/9.4/main -c config_file=/etc/postgresql/9.4/main/postgresql.conf &' && sleep 60 && cd /application/Tornado-Application && coverage run -m tornado.test.runtests unit_tests.run_all_tests && COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN coveralls" 
-  #- mkdir test_results
-  #- docker cp `docker ps -alq`:/application/Tornado-Application test_results
-  #- sudo mkdir /application && sudo mkdir /application/Tornado-Application
-  #- sudo cp -R test_results/Tornado-Application/* /application/Tornado-Application
-  #- sudo cp test_results/Tornado-Application/.coverage /application/Tornado-Application
-  #- sudo cp -R .git /application && cd /application/Tornado-Application
-  #- sudo cp -R -n /usr/local/lib/python2.7/dist-packages/* /usr/local/lib/python2.7/dist-packages/
 
 after_success:
-  #- coveralls
   - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - docker push mxlei01/url-shortener
