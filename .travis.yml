@@ -28,7 +28,7 @@ script:
   - mkdir test_results
   - docker cp `docker ps -alq`:/application/Tornado-Application test_results
   - ls -lart test_results/Tornado-Application/
-  - mkdir /application && mkdir /application/Tornado-Application
+  - sudo mkdir /application && sudo mkdir /application/Tornado-Application
   - cp -R test_results/Tornado-Application /application/Tornado-Application && cd /application/Tornado-Application
   - ls -lart .
 
