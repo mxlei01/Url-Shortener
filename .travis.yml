@@ -30,7 +30,7 @@ script:
   - ls -lart test_results/Tornado-Application/
   - rm -rf Tornado-Application
   - cp -R test_results/Tornado-Application Tornado-Application && cd Tornado-Application
-  - ls -lart Tornado-Application
+  - ls -lart .
 
 after_success:
   - coveralls
