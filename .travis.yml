@@ -30,6 +30,7 @@ script:
   - ls -lart test_results/Tornado-Application/
   - sudo mkdir /application && sudo mkdir /application/Tornado-Application
   - sudo cp -R test_results/Tornado-Application/* /application/Tornado-Application && cd /application/Tornado-Application
+  - sudo cp .git /application/Tornado-Application
   - ls -lart .
 
 after_success:
