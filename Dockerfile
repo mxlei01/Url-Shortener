@@ -77,7 +77,7 @@ VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 USER root
 RUN mkdir /application
 COPY Tornado-Application /application/Tornado-Application
-COPY .get /application
+COPY .git /application
 EXPOSE 8880
 #=====Create a folder, and copy our application into the application folder====
 
