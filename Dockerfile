@@ -77,6 +77,8 @@ VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 USER root
 RUN mkdir /application
 COPY Tornado-Application /application/Tornado-Application
+COPY Build-Scripts /application/Build-Scripts
+COPY .coveragerc /application/
 RUN apt-get install -y git
 COPY .git /application
 EXPOSE 8880
