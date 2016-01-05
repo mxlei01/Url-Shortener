@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/mxlei01/Url-Shortener.svg)](https://travis-ci.org/mxlei01/Url-Shortener)
 [![Code Health](https://landscape.io/github/mxlei01/Facebook-Group-Sentiment-Analysis/master/landscape.svg?style=flat)](https://landscape.io/github/mxlei01/Facebook-Group-Sentiment-Analysis/master)
 [![Coverage Status](https://coveralls.io/repos/mxlei01/Url-Shortener/badge.svg?branch=master&service=github)](https://coveralls.io/github/mxlei01/Url-Shortener?branch=master)
+[![Code Climate](https://codeclimate.com/github/mxlei01/Url-Shortener/badges/gpa.svg)](https://codeclimate.com/github/mxlei01/Url-Shortener)
 
 # url-shortener
 A server side application that shortens url
