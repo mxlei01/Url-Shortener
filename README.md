@@ -2,10 +2,10 @@
 [![Code Health](https://landscape.io/github/mxlei01/Facebook-Group-Sentiment-Analysis/master/landscape.svg?style=flat)](https://landscape.io/github/mxlei01/Facebook-Group-Sentiment-Analysis/master)
 [![Coverage Status](https://coveralls.io/repos/mxlei01/Url-Shortener/badge.svg?branch=master&service=github)](https://coveralls.io/github/mxlei01/Url-Shortener?branch=master)
 [![Code Climate](https://codeclimate.com/github/mxlei01/Url-Shortener/badges/gpa.svg)](https://codeclimate.com/github/mxlei01/Url-Shortener)
+[![Join the chat at https://gitter.im/mxlei01/Url-Shortener](https://badges.gitter.im/mxlei01/Url-Shortener.svg)](https://gitter.im/mxlei01/Url-Shortener?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # url-shortener
 
-[![Join the chat at https://gitter.im/mxlei01/Url-Shortener](https://badges.gitter.im/mxlei01/Url-Shortener.svg)](https://gitter.im/mxlei01/Url-Shortener?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 A server side application that shortens url
 
 # How To Use
