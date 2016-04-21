@@ -4,6 +4,8 @@
 [![Code Climate](https://codeclimate.com/github/mxlei01/Url-Shortener/badges/gpa.svg)](https://codeclimate.com/github/mxlei01/Url-Shortener)
 
 # url-shortener
+
+[![Join the chat at https://gitter.im/mxlei01/Url-Shortener](https://badges.gitter.im/mxlei01/Url-Shortener.svg)](https://gitter.im/mxlei01/Url-Shortener?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 A server side application that shortens url
 
 # How To Use
